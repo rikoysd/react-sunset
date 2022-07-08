@@ -27,8 +27,6 @@ export const Japan: FC = () => {
   const [sunArray, setSunArray] = useState<SunTime[]>([]);
   // 日本以外の都市の一週間日出没
   const [sunArray2, setSunArray2] = useState<SunTime[]>([]);
-  // 都市
-  // const [country, setCountry] = useState("");
   // セレクトボックスで選択された都市
   const [selectedCountry, setSelectedCountry] = useState<WorldCountry>({
     id: 0,
@@ -193,7 +191,10 @@ export const Japan: FC = () => {
   useEffect(() => {
     // デジタル時計
     setInterval(() => getRealTime(), 1000);
+    getSunTime();
+  }, []);
 
+  const getSunTime = () => {
     let sunTimeArray: Array<SunTime> = [];
     let sunObj: SunTime = {
       id: 0,
@@ -258,7 +259,11 @@ export const Japan: FC = () => {
         }
         setSunArray(sunTimeArray);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    getSunTime();
+  }, [sunArray]);
 
   /**
    * 国を選択.
@@ -372,102 +377,106 @@ export const Japan: FC = () => {
   return (
     <SContainer>
       <SPosition3>
-        {(() => {
-          if (loadingFlag === true) {
-            return (
-              <SCard3>
-                <Oval width="60" color="white"></Oval>
-              </SCard3>
-            );
-          } else {
-            if (flag === true) {
+        <SPosition4>
+          <STitleArea>
+            <SSiteName>Sunrise and Sunset</SSiteName>
+            <FormControl sx={{ m: 1, minWidth: 320 }} size="small">
+              <Select
+                labelId="city-select"
+                onChange={onChangeCountries}
+                defaultValue="Tokyo"
+              >
+                <MenuItem value="Tokyo">Tokyo</MenuItem>
+                <MenuItem value="Chicago">Chicago</MenuItem>
+                <MenuItem value="New_York">New York</MenuItem>
+                <MenuItem value="Los_Angeles">Los Angeles</MenuItem>
+                <MenuItem value="London">London</MenuItem>
+                <MenuItem value="Berlin">Berlin</MenuItem>
+                <MenuItem value="Madrid">Madrid</MenuItem>
+                <MenuItem value="Rome">Rome</MenuItem>
+                <MenuItem value="Moscow">Moscow</MenuItem>
+                <MenuItem value="Singapore">Singapore</MenuItem>
+                <MenuItem value="Seoul">Seoul</MenuItem>
+              </Select>
+            </FormControl>
+          </STitleArea>
+        </SPosition4>
+        <SPosition5>
+          {(() => {
+            if (loadingFlag === true) {
               return (
-                <SCard>
-                  <SCity>
-                    <STitle>Tokyo</STitle>
-                    <div>
-                      <SDate>{today}</SDate>
-                      <STime>{nowTime}</STime>
-                    </div>
-                  </SCity>
-                  <SSubTitle>Sunrise&nbsp;&nbsp;Sunset</SSubTitle>
-                  <SPosition2>
-                    <SIconFlex>
-                      <SIcon>
-                        <WbSunnyOutlinedIcon style={{ color: "white" }} />
-                      </SIcon>
-                      <SSunTime>{sunriseTime} /</SSunTime>
-                    </SIconFlex>
-                    <SIconFlex>
-                      <SIcon>
-                        <WbTwilightOutlinedIcon style={{ color: "white" }} />
-                      </SIcon>
-                      <SSunTime>{sunsetTime}</SSunTime>
-                    </SIconFlex>
-                  </SPosition2>
-                </SCard>
+                <SCard3>
+                  <Oval width="60" color="white"></Oval>
+                </SCard3>
               );
             } else {
-              return (
-                <SCard>
-                  <SCity>
-                    {(() => {
-                      if (
-                        selectedCountry.name === "New_York" ||
-                        selectedCountry.name === "Los_Angeles"
-                      ) {
-                        return <STitle2>{selectedCountry.name}</STitle2>;
-                      } else {
-                        return <STitle>{selectedCountry.name}</STitle>;
-                      }
-                    })()}
-                    <div>
-                      <SDate>{selectedCountry.date}</SDate>
-                      <STime>{selectedCountry.dateTime}</STime>
-                    </div>
-                  </SCity>
-                  <SSubTitle>Sunrise&nbsp;&nbsp;Sunset</SSubTitle>
-                  <SPosition2>
-                    <SIconFlex>
-                      <SIcon>
-                        <WbSunnyOutlinedIcon style={{ color: "white" }} />
-                      </SIcon>
-                      <SSunTime>{selectedCountry.sunriseTime} / </SSunTime>
-                    </SIconFlex>
-                    <SIconFlex>
-                      <SIcon>
-                        <WbTwilightOutlinedIcon style={{ color: "white" }} />
-                      </SIcon>
-                      <SSunTime>{selectedCountry.sunsetTime}</SSunTime>
-                    </SIconFlex>
-                  </SPosition2>
-                </SCard>
-              );
+              if (flag === true) {
+                return (
+                  <SCard>
+                    <SCity>
+                      <STitle>Tokyo</STitle>
+                      <div>
+                        <SDate>{today}</SDate>
+                        <STime>{nowTime}</STime>
+                      </div>
+                    </SCity>
+                    <SSubTitle>Sunrise&nbsp;&nbsp;Sunset</SSubTitle>
+                    <SPosition2>
+                      <SIconFlex>
+                        <SIcon>
+                          <WbSunnyOutlinedIcon style={{ color: "white" }} />
+                        </SIcon>
+                        <SSunTime>{sunriseTime} /</SSunTime>
+                      </SIconFlex>
+                      <SIconFlex>
+                        <SIcon>
+                          <WbTwilightOutlinedIcon style={{ color: "white" }} />
+                        </SIcon>
+                        <SSunTime>{sunsetTime}</SSunTime>
+                      </SIconFlex>
+                    </SPosition2>
+                  </SCard>
+                );
+              } else {
+                return (
+                  <SCard>
+                    <SCity>
+                      {(() => {
+                        if (
+                          selectedCountry.name === "New_York" ||
+                          selectedCountry.name === "Los_Angeles"
+                        ) {
+                          return <STitle2>{selectedCountry.name}</STitle2>;
+                        } else {
+                          return <STitle>{selectedCountry.name}</STitle>;
+                        }
+                      })()}
+                      <div>
+                        <SDate>{selectedCountry.date}</SDate>
+                        <STime>{selectedCountry.dateTime}</STime>
+                      </div>
+                    </SCity>
+                    <SSubTitle>Sunrise&nbsp;&nbsp;Sunset</SSubTitle>
+                    <SPosition2>
+                      <SIconFlex>
+                        <SIcon>
+                          <WbSunnyOutlinedIcon style={{ color: "white" }} />
+                        </SIcon>
+                        <SSunTime>{selectedCountry.sunriseTime} / </SSunTime>
+                      </SIconFlex>
+                      <SIconFlex>
+                        <SIcon>
+                          <WbTwilightOutlinedIcon style={{ color: "white" }} />
+                        </SIcon>
+                        <SSunTime>{selectedCountry.sunsetTime}</SSunTime>
+                      </SIconFlex>
+                    </SPosition2>
+                  </SCard>
+                );
+              }
             }
-          }
-        })()}
-        <STitleArea>
-          <SSiteName>Sunrise and Sunset</SSiteName>
-          <FormControl sx={{ m: 1, minWidth: 320 }} size="small">
-            <Select
-              labelId="city-select"
-              onChange={onChangeCountries}
-              defaultValue="Tokyo"
-            >
-              <MenuItem value="Tokyo">Tokyo</MenuItem>
-              <MenuItem value="Chicago">Chicago</MenuItem>
-              <MenuItem value="New_York">New York</MenuItem>
-              <MenuItem value="Los_Angeles">Los Angeles</MenuItem>
-              <MenuItem value="London">London</MenuItem>
-              <MenuItem value="Berlin">Berlin</MenuItem>
-              <MenuItem value="Madrid">Madrid</MenuItem>
-              <MenuItem value="Rome">Rome</MenuItem>
-              <MenuItem value="Moscow">Moscow</MenuItem>
-              <MenuItem value="Singapore">Singapore</MenuItem>
-              <MenuItem value="Seoul">Seoul</MenuItem>
-            </Select>
-          </FormControl>
-        </STitleArea>
+          })()}
+        </SPosition5>
       </SPosition3>
       {(() => {
         if (flag === true) {
@@ -538,6 +547,10 @@ const SContainer = styled("div")({
       backgroundPosition: "0% 50%",
     },
   },
+  "@media screen and (max-width:1024px)": {
+    height: "100%",
+    padding: "60px 0",
+  },
 });
 
 const SCard = styled("div")({
@@ -549,10 +562,17 @@ const SCard = styled("div")({
   marginRight: "40px",
   boxShadow:
     "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
+  "@media screen and (max-width:1024px)": {
+    marginRight: 0,
+    marginTop: "40px",
+  },
 });
 
 const SCard2 = styled("div")({
   padding: "8px 30px",
+  "@media screen and (max-width:1024px)": {
+    marginBottom: "20px",
+  },
 });
 
 const SCard3 = styled("div")({
@@ -567,6 +587,10 @@ const SCard3 = styled("div")({
   alignItem: "center",
   boxShadow:
     "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
+  "@media screen and (max-width:1024px)": {
+    marginRight: 0,
+    marginTop: "40px",
+  },
 });
 
 const STitle = styled("div")({
@@ -589,12 +613,20 @@ const STitle2 = styled("div")({
 
 const STitleArea = styled("div")({
   marginTop: "90px",
+  "@media screen and (max-width:1024px)": {
+    marginTop: 0,
+  },
 });
 
 const SSiteName = styled("div")({
   fontSize: "40px",
   marginBottom: "20px",
   color: "white",
+  "@media screen and (max-width:1024px)": {
+    fontSize: "30px",
+    textAlign: "center",
+    marginBottom: "10px",
+  },
 });
 
 const SIcon = styled("div")({
@@ -639,6 +671,16 @@ const STime2 = styled("div")({
   color: "white",
 });
 
+const SPosition = styled("div")({
+  display: "flex",
+  justifyContent: "center",
+  marginTop: "80px",
+  "@media screen and (max-width:1024px)": {
+    flexWrap: "wrap",
+    marginTop: "60px",
+  },
+});
+
 const SPosition2 = styled("div")({
   display: "flex",
 });
@@ -647,6 +689,27 @@ const SPosition3 = styled("div")({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  "@media screen and (max-width:1024px)": {
+    display: "block",
+  },
+});
+
+const SPosition4 = styled("div")({
+  order: "2",
+  "@media screen and (max-width:1024px)": {
+    display: "flex",
+    justifyContent: "center",
+    order: "1",
+  },
+});
+
+const SPosition5 = styled("div")({
+  order: "1",
+  "@media screen and (max-width:1024px)": {
+    display: "flex",
+    justifyContent: "center",
+    order: "2",
+  },
 });
 
 const SSubTitle = styled("div")({
@@ -660,12 +723,6 @@ const SSunTime = styled("div")({
   fontSize: "25px",
   color: "white",
   textShadow: "1px 2px 2px rgba(151, 151, 163, 0.2)",
-});
-
-const SPosition = styled("div")({
-  display: "flex",
-  justifyContent: "center",
-  marginTop: "80px",
 });
 
 const SCity = styled("div")({
